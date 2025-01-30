@@ -15,3 +15,5 @@ taskStateInfoKeypair.json
 localKOIIDB.db
 metadata.json
 .npmrc
+
+test-ledger/

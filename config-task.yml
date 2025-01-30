@@ -1,6 +1,6 @@
 # Name and metadata of your task
-task_name: 'Hello World Orca'
-author: 'Koii'
+task_name: 'Immu.ai Orca Test'
+author: 'elijaholmos'
 description: 'description'
 repositoryUrl: 'https://github.com/koii-network/task-template' # Replace with your own repo URL
 imageUrl: 'imageUrl'
@@ -45,7 +45,6 @@ space: 0.1
 
 # Note that the value field in RequirementTag is optional, so it is up to you to include it or not based on your use case.
 # To add more global variables and task variables, please refer to the type, value, description format shown below.
-
 requirementsTags:
   - type: ADDON
     value: 'ORCA_TASK'
@@ -54,7 +53,7 @@ requirementsTags:
 
 # ONLY provide the task_id and migrationDescription if you are updating the task, otherwise leave blank.
 # Task_id: Previous task ID.
-task_id: 'B9ku2vPpZ3TJkmkciWNKhb43dJ9J65siZ8GwFLEoBQJn'
+# task_id: 'B9ku2vPpZ3TJkmkciWNKhb43dJ9J65siZ8GwFLEoBQJn'
 
 # Migration description: Provide the description for changes made in the new version of the task.
-migrationDescription: 'update task'
+# migrationDescription: 'update task'

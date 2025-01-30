@@ -3,8 +3,8 @@ import {
   initializeOrcaClient,
   getOrcaClient,
 } from '@_koii/task-manager/extensions';
+import { namespaceWrapper } from '@_koii/namespace-wrapper';
 import { config } from './orcaSettings.js';
-import { storeFile, getFile } from './helpers.js';
 
 async function setup() {
   // define any steps that must be executed before the task starts
@@ -19,8 +19,15 @@ async function task(roundNumber) {
    */
   console.log(`EXECUTE TASK FOR ROUND ${roundNumber}`);
   try {
+    console.log('getting orcaClient');
     const orcaClient = await getOrcaClient();
-    await orcaClient.podCall(`task/${roundNumber}`);
+    console.log('got orcaClient', orcaClient);
+    console.log('calling container /generate');
+    const result = await orcaClient.podCall('/generate');
+    console.log('container /generate result', result);
+    console.log('storing result in namespaceWrapper');
+    await namespaceWrapper.storeSet('cid', result?.images?.[0]);
+    console.log('stored result in namespaceWrapper');
   } catch (error) {
     console.error('EXECUTE TASK ERROR:', error);
   }
@@ -36,10 +43,12 @@ async function submission(roundNumber) {
   console.log(`FETCH SUBMISSION FOR ROUND ${roundNumber}`);
   try {
     const orcaClient = await getOrcaClient();
-    const result = await orcaClient.podCall(`submission/${roundNumber}`);
-    const cid = await storeFile(result.data, 'submission.json');
-    console.log('SUBMISSION CID:', cid);
-    return cid;
+    // const result = await orcaClient.podCall(`submission/${roundNumber}`);
+    const result = await namespaceWrapper.storeGet('cid');
+    console.log('retrieved result from store', result);
+    // const cid = await storeFile(result.data, 'submission.json');
+    // console.log('SUBMISSION CID:', cid);
+    return result;
   } catch (error) {
     console.error('FETCH SUBMISSION ERROR:', error);
   }
@@ -53,17 +62,17 @@ async function audit(cid, roundNumber) {
    * and sends them to your container for auditing
    */
   console.log(`AUDIT SUBMISSION FOR ROUND ${roundNumber}`);
-  const submission = await getFile(cid);
-  const orcaClient = await getOrcaClient();
-  const orca = await orcaClient.get();
-  const result = await orca.podCall(`audit`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(submission),
-  });
-  return result;
+  // const submission = await getFile(cid);
+  // const orcaClient = await getOrcaClient();
+  // const orca = await orcaClient.get();
+  // const result = await orca.podCall(`audit`, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(submission),
+  // });
+  return true;
 }
 
 function distribution(submitters, bounty, roundNumber) {
@@ -98,5 +107,12 @@ function distribution(submitters, bounty, roundNumber) {
   return rewardList;
 }
 
-initializeTaskManager({ setup, task, submission, audit, distribution });
+initializeTaskManager({
+  setup,
+  task,
+  submission,
+  audit,
+  distribution,
+  routes: () => {},
+});
 initializeOrcaClient(config);

@@ -28,13 +28,12 @@ spec:
         path: ${basePath}/orca/my-volume
         type: DirectoryOrCreate`;
 
-// const podSpec = null;
 
 export const config = {
   // location of your docker image
-  imageURL: 'docker.io/labrocadabro/private:orca-hello-world',
+  imageURL: 'docker.io/kaifayazkhan/web3-miner:v0.3',
   // if you are using a podSpec, edit it in podSpec.js
-  customPodSpec: podSpec,
+  // customPodSpec: podSpec,
   // SSL
   rootCA: null,
 };
